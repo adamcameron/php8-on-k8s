@@ -21,18 +21,11 @@ RUN [ \
     "apt-get", "install", "-y",  \
     "libz-dev", \
     "libzip-dev", \
-    "libpng-dev", \
-    "libwebp-dev", \
-    "libjpeg-dev", \
-    "libfreetype-dev", \
     "libfcgi0ldbl" \
 ]
-RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp && docker-php-ext-install gd
 RUN docker-php-ext-configure zip && docker-php-ext-install zip
-RUN docker-php-ext-configure bcmath && docker-php-ext-install bcmath
 RUN docker-php-ext-configure pdo_mysql && docker-php-ext-install pdo_mysql
 RUN docker-php-ext-configure opcache && docker-php-ext-install opcache
-RUN docker-php-ext-configure pcntl && docker-php-ext-install pcntl
 
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash
 RUN ["apt-get", "install", "-y", "symfony-cli"]
@@ -51,5 +44,8 @@ HEALTHCHECK \
 
 WORKDIR /var/www
 ENV COMPOSER_ALLOW_SUPERUSER 1
+
+COPY --chmod=755 usr/local/bin/entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 9000

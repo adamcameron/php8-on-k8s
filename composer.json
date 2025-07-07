@@ -1,0 +1,30 @@
+{
+    "name": "adamcameron/php8-on-k8s",
+    "description": "Experimenting with Kubernetes",
+    "type": "project",
+    "license": "LGPL-3.0-only",
+    "require": {
+        "php": "^8.4",
+        "ext-mbstring": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-zend-opcache": "*",
+        "ext-zip": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "scripts" : {
+        "test": "vendor/bin/phpunit"
+    }
+}
