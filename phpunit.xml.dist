@@ -14,6 +14,9 @@
     failOnRisky="true"
     failOnWarning="true"
 >
+    <php>
+        <env name="KERNEL_CLASS" value="App\Kernel"/>
+    </php>
     <coverage>
         <report>
             <html outputDirectory="public/test-coverage-report/" />

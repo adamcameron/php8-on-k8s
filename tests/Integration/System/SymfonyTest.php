@@ -13,29 +13,26 @@ use Symfony\Component\HttpFoundation\Response;
 #[TestDox('Tests of Symfony installation')]
 class SymfonyTest extends TestCase
 {
-    #[TestDox('It serves the default welcome page after installation')]
-    public function testSymfonyWelcomeScreenDisplays()
+    #[TestDox('It serves the home page')]
+    public function testIndexPage()
     {
         $client = new Client([
             'base_uri' => 'http://nginx/'
         ]);
 
-        $response = $client->get(
-            '/',
-            ['http_errors' => false]
-        );
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+        $response = $client->get('/');
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
-        $html = $response->getBody();
+        $html = (string) $response->getBody();
+
         $document = new DOMDocument();
-
         // not ideal, but libxml can't handle the SVG in the Symfony logo
         $document->loadHTML($html, LIBXML_NOWARNING | LIBXML_NOERROR);
 
-        $xpathDocument = new DOMXPath($document);
+        $body = $document->getElementsByTagName('body')->item(0);
+        $bodyText = trim($body->textContent);
 
-        $hasTitle = $xpathDocument->query('/html/head/title[text() = "Welcome to Symfony!"]');
-        $this->assertCount(1, $hasTitle);
+        $this->assertSame('Hello world', $bodyText);
     }
 
     #[TestDox('It can run the console in a shell')]
