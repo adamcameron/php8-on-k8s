@@ -8,8 +8,6 @@ RUN echo "alias cls='clear; printf \"\033[3J\"'" >> ~/.bashrc
 COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY etc/nginx/conf.d/ /etc/nginx/conf.d/
 
-COPY usr/share/nginx/html/nginx-health.html /usr/share/nginx/html/nginx-health.html
-
 HEALTHCHECK \
     --start-period=30s \
     --interval=30s \

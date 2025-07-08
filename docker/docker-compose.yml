@@ -1,28 +1,56 @@
 services:
-  nginx:
-    build:
-      context: nginx
-      dockerfile: Dockerfile
+    nginx:
+        build:
+            context: nginx
+            dockerfile: Dockerfile
 
-    ports:
-      - "8080:80"
+        ports:
+            - "8080:80"
 
-    stdin_open: true
-    tty: true
+        stdin_open: true
+        tty: true
 
-    volumes:
-      - ../public:/usr/share/nginx/html/
+        volumes:
+            - ../public:/usr/share/nginx/html/
 
-    depends_on:
-      - php
+        depends_on:
+            - php
 
-  php:
-    build:
-      context: php
-      dockerfile: Dockerfile
+    php:
+        build:
+            context: php
+            dockerfile: Dockerfile
 
-    stdin_open: true
-    tty: true
+        env_file:
+            - envVars.public
+            - php/envVars.public
+            - envVars.private
+            - php/envVars.private
 
-    volumes:
-      - ..:/var/www
+        stdin_open: true
+        tty: true
+
+        volumes:
+            - ..:/var/www
+
+    mariadb:
+        build:
+            context: mariadb
+            dockerfile: Dockerfile
+
+        env_file:
+            - envVars.public
+            - envVars.private
+            - mariadb/envVars.private
+
+        ports:
+            - "3380:3306"
+
+        stdin_open: true
+        tty: true
+
+        volumes:
+            - mariadb-data:/var/lib/mariadb
+
+volumes:
+    mariadb-data:
