@@ -1,5 +1,6 @@
 services:
     nginx:
+        container_name: nginx
         build:
             context: nginx
             dockerfile: Dockerfile
@@ -13,19 +14,20 @@ services:
         volumes:
             - ../public:/usr/share/nginx/html/
 
-        depends_on:
-            - php
-
     php:
+        container_name: php
         build:
             context: php
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.dev
 
         env_file:
             - envVars.public
             - php/envVars.public
             - envVars.private
             - php/envVars.private
+
+        ports:
+            - "9000:9000"
 
         stdin_open: true
         tty: true
@@ -34,6 +36,7 @@ services:
             - ..:/var/www
 
     mariadb:
+        container_name: db
         build:
             context: mariadb
             dockerfile: Dockerfile

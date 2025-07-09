@@ -1,0 +1,17 @@
+FROM adamcameron/php8-on-k8s-base
+
+WORKDIR /var/www
+
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
+COPY docker/php/usr/local/etc/php/conf.d/php8-on-k8s.ini /usr/local/etc/php/conf.d/php8-on-k8s.ini
+
+# need to use 777 as both php-fpm and php-cli will write to these directories
+RUN mkdir -p /var/cache/symfony/prod && chown www-data:www-data /var/cache/symfony/prod && chmod 777 /var/cache/symfony/prod
+
+COPY .env.prod .env
+COPY config config
+COPY src src
+COPY public public
+COPY templates templates
+
+EXPOSE 9000

@@ -71,7 +71,7 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "test": "vendor/bin/phpunit",
+        "test": "vendor/bin/phpunit --no-progress",
         "test-all": [
             "composer validate --strict",
             "@test"

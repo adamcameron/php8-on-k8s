@@ -8,6 +8,13 @@ RUN echo "alias cls='clear; printf \"\033[3J\"'" >> ~/.bashrc
 
 COPY ./docker-entrypoint-initdb.d/ /docker-entrypoint-initdb.d/
 
+HEALTHCHECK \
+    --interval=30s \
+    --timeout=5s \
+    --start-period=30s \
+    --retries=3 \
+    CMD sh -c 'mysqladmin ping -h localhost -u $MARIADB_USER --password=$MARIADB_PASSWORD || exit 1'
+
 CMD ["mariadbd"]
 
 EXPOSE 3306

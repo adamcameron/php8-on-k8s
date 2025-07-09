@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[TestDox('Tests of Symfony testing')]
 class SymfonyTest extends WebTestCase
 {
-    #[TestDox('It serves the default welcome page after installation')]
+    #[TestDox('It serves the home page')]
     public function testSymfonyWelcomeScreenDisplays()
     {
         $client = static::createClient();
