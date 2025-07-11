@@ -110,3 +110,5 @@ docker exec php bin/console about | grep -B 1 -A 2 Kernel
 0.7 - Test DB connection from PHP container
 
 0.71 - Bugs & tweaks for dev/prod-by-docker config
+
+0.72 - Another bug
