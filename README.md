@@ -61,7 +61,7 @@ docker build \
 docker run \
     --name php \
     --restart unless-stopped \
-    -p 31000:9000 \
+    -p 9000:9000 \
     --env-file docker/envVars.public \
     --env-file docker/php/envVars.public \
     --env-file docker/php/envVars.prod.public \
@@ -70,7 +70,7 @@ docker run \
     --add-host=host.docker.internal:host-gateway \
     --detach \
     -it \
-    adamcameron/php8-on-k8s
+    adamcameron/php8-on-k8s:latest
     
 # verify stability
 docker container ls --format "table {{.Names}}\t{{.Status}}" | grep php
@@ -108,3 +108,5 @@ docker exec php bin/console about | grep -B 1 -A 2 Kernel
 0.61 - Fix k8s config bugs and update home template
 
 0.7 - Test DB connection from PHP container
+
+0.71 - Bugs & tweaks for dev/prod-by-docker config
