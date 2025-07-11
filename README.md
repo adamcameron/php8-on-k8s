@@ -52,13 +52,19 @@ This presupposes appropriate Nginx and DB servers are already running
 # only need to do this once or if Dockerfile.base changes
 docker build -f docker/php/Dockerfile.base -t adamcameron/php8-on-k8s-base .
 
-docker build -f docker/php/Dockerfile.prod -t adamcameron/php8-on-k8s .
+docker build \
+    -f docker/php/Dockerfile.prod \
+    -t adamcameron/php8-on-k8s:x.y \ # where x.y is the actual version, e.g. 0.6 \
+    -t adamcameron/php8-on-k8s:latest \
+    .
+
 docker run \
     --name php \
     --restart unless-stopped \
-    -p 9000:9000 \
+    -p 31000:9000 \
     --env-file docker/envVars.public \
     --env-file docker/php/envVars.public \
+    --env-file docker/php/envVars.prod.public \
     --env-file docker/envVars.private \
     --env-file docker/php/envVars.private \
     --add-host=host.docker.internal:host-gateway \
@@ -96,3 +102,5 @@ docker exec php bin/console about | grep -B 1 -A 2 Kernel
 0.41 - Testing Symfony test environment config
 
 0.5 - Rejigging for dev/prod environments for PHP container
+
+0.6 - Rejig for Kubernetes requirements

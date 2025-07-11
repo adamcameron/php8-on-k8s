@@ -1,4 +1,5 @@
 **/envVars.private
+**/*.secret.yaml
 
 /.idea/
 /vendor/
