@@ -13,4 +13,4 @@ if [ -z "$HOST_IP" ]; then
   exit 1
 fi
 
-kubectl set env deployment/php MYSQL_HOST=$HOST_IP
+kubectl set env deployment/php MARIADB_HOST=$HOST_IP

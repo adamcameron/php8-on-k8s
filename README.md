@@ -104,3 +104,5 @@ docker exec php bin/console about | grep -B 1 -A 2 Kernel
 0.5 - Rejigging for dev/prod environments for PHP container
 
 0.6 - Rejig for Kubernetes requirements
+
+0.61 - Fix k8s config bugs and update home template

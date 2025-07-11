@@ -14,12 +14,19 @@ spec:
         spec:
             containers:
                 - name: php
-                  image: adamcameron/php8-on-k8s
+                  image: adamcameron/php8-on-k8s:latest
                   ports:
                       - containerPort: 9000
                   envFrom:
                       - configMapRef:
                             name: php-config
                       - secretRef:
-                            name: php-env-private
+                            name: php-secret
+                  env:
+                    - name: POD_NAME
+                      valueFrom:
+                        fieldRef:
+                          fieldPath: metadata.name
+                    - name: CONTAINER_NAME
+                      value: php
             restartPolicy: Always

@@ -13,7 +13,10 @@ class HomeController extends AbstractController
     {
         return $this->render(
             'home/index.html.twig',
-            ['environment' => $this->getParameter('kernel.environment')]
+            [
+                'environment' => $this->getParameter('kernel.environment'),
+                'podName' => getenv('POD_NAME', 'unknown'),
+            ]
         );
     }
 }
