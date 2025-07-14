@@ -3,7 +3,6 @@
 namespace App\Tests\Integration\System;
 
 use DOMDocument;
-use DOMXPath;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +31,10 @@ class SymfonyTest extends TestCase
         $body = $document->getElementsByTagName('body')->item(0);
         $bodyText = trim($body->textContent);
 
-        $this->assertSame('Hello world', $bodyText);
+        $this->assertStringContainsString('Hello world from Symfony', $bodyText);
+        $this->assertStringContainsString('Mode: dev', $bodyText);
+        $this->assertStringContainsString('Pod name: unknown', $bodyText);
+        $this->assertMatchesRegularExpression('/DB version: 10.*MariaDB/', $bodyText);
     }
 
     #[TestDox('It can run the console in a shell')]

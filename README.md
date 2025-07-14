@@ -112,3 +112,5 @@ docker exec php bin/console about | grep -B 1 -A 2 Kernel
 0.71 - Bugs & tweaks for dev/prod-by-docker config
 
 0.72 - Another bug
+
+0.73 - Fixing unit test that got missed during TDD of the dev/prod split

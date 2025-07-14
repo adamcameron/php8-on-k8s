@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/schema/12.1.xsd"
     colors="true"
     cacheResult="false"
-    testdox="true"
+    testdox="false"
     bootstrap="tests/bootstrap.php"
     cacheDirectory=".phpunit.cache"
     executionOrder="depends,defects"
@@ -16,6 +16,7 @@
 >
     <php>
         <env name="KERNEL_CLASS" value="App\Kernel"/>
+        <env name="APP_DEBUG" value="false"/>
     </php>
     <coverage>
         <report>
