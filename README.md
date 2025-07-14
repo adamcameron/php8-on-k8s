@@ -50,14 +50,28 @@ This presupposes appropriate Nginx and DB servers are already running
 # from the root of the project
 
 # only need to do this once or if Dockerfile.base changes
-docker build -f docker/php/Dockerfile.base -t adamcameron/php8-on-k8s-base .
+docker build \
+  -f docker/php/Dockerfile.base \
+  -t adamcameron/php8-on-k8s-base:x.y \ # where x.y is the actual version, e.g. 0.6 \
+  -t adamcameron/php8-on-k8s-base:latest \
+  .
+docker push adamcameron/php8-on-k8s-base:x.y 
+docker push adamcameron/php8-on-k8s-base:latest
 
+# this is for the prod container
 docker build \
     -f docker/php/Dockerfile.prod \
     -t adamcameron/php8-on-k8s:x.y \ # where x.y is the actual version, e.g. 0.6 \
     -t adamcameron/php8-on-k8s:latest \
     .
 
+docker push adamcameron/php8-on-k8s:x.y
+docker push adamcameron/php8-on-k8s:latest
+```
+
+## Running the prod container via Docker
+
+```bash
 docker run \
     --name php \
     --restart unless-stopped \
@@ -88,6 +102,38 @@ docker exec php bin/console about | grep -B 1 -A 2 Kernel
   Environment          prod
   Debug                false
 ```
+## Running the prod container via Kubernetes
+
+```bash
+# from the root of the project
+k8s/bin/applyConfig.sh
+configmap/php-config created
+secret/php-secret created
+deployment.apps/php created
+service/php created
+deployment.apps/php env updated
+
+# verify stability
+kubectl get pods --field-selector=status.phase=Running -o custom-columns="NAME:.metadata.name,STATUS:.status.phase"
+NAME                  STATUS
+php-86c4cf8b4-8q8q9   Running
+php-86c4cf8b4-gkmkw   Running
+php-86c4cf8b4-lxfx4   Running
+
+# repeat this curl to verify different pods are being used
+curl -s http://php8-on-k8s.local:8080/ | grep "Pod name"
+    Pod name: php-86c4cf8b4-gkmkw<br>
+
+# use one of the pods to verify the Symfony app is running and in prod mode
+kubectl exec -it php-86c4cf8b4-gkmkw -- bin/console about | grep -B 1 -A 2 Kernel
+ -------------------- -------------------------------------------
+  Kernel
+ -------------------- -------------------------------------------
+  Type                 App\Kernel
+  Environment          prod
+  Debug                false
+
+```
 
 ## Changes
 
@@ -109,8 +155,4 @@ docker exec php bin/console about | grep -B 1 -A 2 Kernel
 
 0.7 - Test DB connection from PHP container
 
-0.71 - Bugs & tweaks for dev/prod-by-docker config
-
-0.72 - Another bug
-
-0.73 - Fixing unit test that got missed during TDD of the dev/prod split
+0.8 - Configure for k8s deployment
