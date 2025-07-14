@@ -121,8 +121,8 @@ php-86c4cf8b4-gkmkw   Running
 php-86c4cf8b4-lxfx4   Running
 
 # repeat this curl to verify different pods are being used
-curl -s http://php8-on-k8s.local:8080/ | grep "Pod name"
-    Pod name: php-86c4cf8b4-gkmkw<br>
+curl -s http://php8-on-k8s.local:8080/ | grep "Instance ID"
+    Instance ID: php-86c4cf8b4-gkmkw<br>
 
 # use one of the pods to verify the Symfony app is running and in prod mode
 kubectl exec -it php-86c4cf8b4-gkmkw -- bin/console about | grep -B 1 -A 2 Kernel
@@ -132,7 +132,44 @@ kubectl exec -it php-86c4cf8b4-gkmkw -- bin/console about | grep -B 1 -A 2 Kerne
   Type                 App\Kernel
   Environment          prod
   Debug                false
+```
 
+## Running the prod container via Docker Swarm
+
+```bash
+# only needed once to start-up the swarm
+docker swarm init --advertise-addr 127.0.0.1
+
+docker service create \
+    --name php \
+    --replicas 3 \
+    --publish published=9000,target=9000 \
+    --env-file docker/envVars.public \
+    --env-file docker/php/envVars.public \
+    --env-file docker/php/envVars.prod.public \
+    --env-file docker/envVars.private \
+    --env-file docker/php/envVars.private \
+    --host host.docker.internal:host-gateway \
+    adamcameron/php8-on-k8s:latest
+    
+# verify stability
+docker container ls --all --format "table {{.Names}}\t{{.Status}}" | grep php
+php.1.lkrg5g45mb3njmi180gupyknh    Up About a minute (healthy)
+php.2.nrwt1j0zhq0bvl1rybb41nytj    Up About a minute (healthy)
+php.3.gag30v8g34xmhsgper83n8u8i    Up About a minute (healthy)
+
+# repeat this curl to verify different pods are being used
+curl -s http://php8-on-k8s.local:8080/ | grep "Instance ID"
+    Instance ID: 04c8f570e5d4<br>
+
+# use one of the containers to verify the Symfony app is running and in prod mode
+docker exec php.1.lkrg5g45mb3njmi180gupyknh  bin/console about | grep -B 1 -A 2 Kernel
+ -------------------- -------------------------------------------
+  Kernel
+ -------------------- -------------------------------------------
+  Type                 App\Kernel
+  Environment          prod
+  Debug                false
 ```
 
 ## Changes
@@ -156,3 +193,5 @@ kubectl exec -it php-86c4cf8b4-gkmkw -- bin/console about | grep -B 1 -A 2 Kerne
 0.7 - Test DB connection from PHP container
 
 0.8 - Configure for k8s deployment
+
+0.9 - Add Docker Swarm support

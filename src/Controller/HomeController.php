@@ -21,7 +21,7 @@ class HomeController extends AbstractController
             'home/index.html.twig',
             [
                 'environment' => $this->getParameter('kernel.environment'),
-                'podName' => getenv('POD_NAME') ?: 'unknown',
+                'instanceId' => getenv('POD_NAME') ?: getenv('HOSTNAME') ?: 'unknown',
                 'dbVersion' => $this->versionService->getVersion(),
             ]
         );

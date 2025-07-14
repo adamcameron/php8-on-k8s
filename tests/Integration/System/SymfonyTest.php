@@ -33,7 +33,7 @@ class SymfonyTest extends TestCase
 
         $this->assertStringContainsString('Hello world from Symfony', $bodyText);
         $this->assertStringContainsString('Mode: dev', $bodyText);
-        $this->assertStringContainsString('Pod name: unknown', $bodyText);
+        $this->assertMatchesRegularExpression('/Instance ID: [0-9a-f]{12}/', $bodyText);
         $this->assertMatchesRegularExpression('/DB version: 10.*MariaDB/', $bodyText);
     }
 
